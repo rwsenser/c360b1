@@ -1,0 +1,1 @@
+%C360HOME%\bin\gccmvs.exe  -I %C360HOME%\lib\ -S %1.c 

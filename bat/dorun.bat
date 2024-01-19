@@ -1,0 +1,1 @@
+call %C360HOME%\z390\bat\asmlg.bat %1.mlc %2
