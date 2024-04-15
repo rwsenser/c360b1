@@ -10,13 +10,13 @@ Installation Steps:
 
 2) Decide which IBM mainframe emulator(s) to use
 
-We tend to first test with z390 and then with a Hercules-based system.
+    We tend to first test with z390 and then with a Hercules-based system.
 
 3) Customize Scripts (bat files) for PC use
 
-4) Be certain the a recent version of Python3 is installed to support the c360expand.py script.
+   This normally amounts to changing PATH in the setPath.bat file. 
 
-This normally amounts to changing PATH in the \textbf{setPath.bat} file. 
+4) Be certain that a recent version of Python3 is installed to support the c360expand.py script.
 
 5) Run the Installation Verification Programs on the s/360 emulator.
 
