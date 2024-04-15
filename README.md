@@ -18,7 +18,7 @@ Installation Steps:
 
 4) Be certain that a recent version of Python3 is installed to support the c360expand.py script.
 
-5) Run the Installation Verification Programs on the s/360 emulator.
+5) Run the Installation Verification Programs on the S/360 emulator.
 
 Enjoy! We have produced several small C applications with this tool chain and they function as expected. In one case, a 64-line C program resulted in 2,309 lines of Assembler!
 
