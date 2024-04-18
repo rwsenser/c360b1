@@ -5,15 +5,20 @@
 #
 #  author: RWSenser
 #    data: 2023-12-26
-# version: 2
 #
-# usage: <pgm>.py -i <inputfile> -o <outputfile>
-#
+# usage: <pgm>.py -i <inputfile> -o <outputfile> -b <path> -n (optional)
+# version beta 2:
+# 2024-01-25: add code to cleanup output source, helps TSO IND$FILE
+
+# version 1:
 # 2023-12-28: add code to list actual long labels
 #
 import sys, getopt
 import os.path
 from datetime import datetime
+
+version = "beta 2"
+cleanon = True    
 
 # get copybook contents
 def loadbook(name, path):
@@ -47,20 +52,22 @@ def main(argv):
    inputfile = ''
    outputfile = ''
    bookpath = ''
+   cleanon = True  
    dupdict = { }
-   print("c360expand:") 
-   opts, args = getopt.getopt(argv,"hi:o:b:",["ifile=","ofile=","bpath="])
+   print("c360expand (version " + version + "):") 
+   opts, args = getopt.getopt(argv,"hi:o:b:n",["ifile=","ofile=","bpath=","noclean"])
    for opt, arg in opts:
       if opt == '-h':
-         print ('<pgm>.py -i <inputfile> -o <outputfile> -b <bookpath>')
+         print ('<pgm>.py -i <inputfile> -o <outputfile> -b <bookpath> -n (optional)')
          sys.exit()
       elif opt in ("-i", "--ifile"):
          inputfile = arg
       elif opt in ("-o", "--ofile"):
          outputfile = arg
-      elif opt in ("-b", "--path"):
+      elif opt in ("-b", "--bpath"):
          bookpath = arg
-         
+      elif opt in ("-n", "--noclean"):
+         cleanon = False
    if inputfile == outputfile:
       print("error: file names are equal!")
       exit()   
@@ -112,7 +119,6 @@ def main(argv):
    
    # add timestamp to output file
    content.append("* time: " + str(datetime.now()) + " COPYbooks: " + str(copycnt) + " warnings: " + str(warncnt))    
-   
    # write output file, give counts, etc
    print(str(copycnt) + " COPYbooks processed") 
    print(str(recodecnt) + " instructions recoded")
@@ -126,7 +132,28 @@ def main(argv):
            break
        label = dupdict[line]
        print(label)
-   # output file  
+   #
+   # beta 1b enhancment, cleanup source output,
+   # only printable chars and end of line permitted
+   # other special chars (like tab) become spaces
+   # 
+   cleancnt = 0
+   if cleanon == True:
+       for i in range(0, len(content)):
+           line = content[i]
+           for j in range(0,len(line)):   # ignore eol
+               ch = line[j]
+               if ord(ch) != 10 and ch.isprintable() == False:
+                   cleancnt += 1
+                   newline = line.replace(ch,' ') #dirty!!!
+                   line = newline
+                   content[i] = line              # brute force!!!
+       print(str(cleancnt) + " odd characters removed")            
+   else:
+       print("source cleaning is off")   
+
+   #
+   # output file    
    with open(outputfile, "w") as f:
       f.writelines(content)
       
